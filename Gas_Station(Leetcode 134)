@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int n = gas.size();
+        int m = cost.size();
+        int ans = accumulate(gas.begin(), gas.end(),0);
+        int totalcost = accumulate(cost.begin(), cost.end(),0);
+        if(totalcost>ans){
+            return -1;
+        }
+        int ind = -1;
+        int mini = ans;
+        for(int i = 0;i<n;i++){
+            ans+= (gas[i] - cost[i]);
+            if(mini>ans){
+                ind = i; 
+            }
+            mini = min(ans, mini);
+        }
+        return ind+1;
+    }
+};
