@@ -1,0 +1,99 @@
+struct Node{
+    Node* links[26];
+    bool flag = false;
+    bool containsKey(char ch){
+        return links[ch - 'a']!= NULL;
+    }
+    void put(char ch, Node* node){
+        links[ch-'a'] = node;
+    }
+    Node* get(char ch){
+        return links[ch-'a'];
+    }
+    void setEnd(){
+        flag = true;
+    }
+    bool isEnd(){
+        return flag;
+    }
+    int countChildren(char &nextchar){
+        int count = 0;
+        for(int i = 0;i<26;i++){
+            if(links[i]!= NULL){
+                count++;
+                nextchar = 'a' + i;
+            }
+        }
+        return counat;
+    }
+};
+
+class Trie{
+    private: Node* root;
+    public: 
+    Trie(){
+        root = new Node();
+    }
+    void Insert(string word){
+        Node* node = root;
+        for(int i = 0;i<word.length();i++){
+            char ch = word[i];
+            if(!node->containsKey(ch)){
+                node->put(ch,new Node());
+            }
+            node = node->get(ch);
+        }
+        node->setEnd();
+    }
+    bool search(string word){
+        int n = word.length();
+        Node* node = root;
+        for(int i = 0;i<n;i++){
+            char ch = word[i];
+            if(!node->containsKey(ch)){
+                return  false;
+            }
+            node = node->get(ch);
+        }
+        return node->isEnd();
+    }
+    bool startsWith(string word){
+        int n = word.length();
+        Node* node = root;
+        for(int i = 0;i<n;i++){
+            char ch = word[i];
+            if(!node->containsKey(ch)){
+                return false;
+            }
+            node = node->get(ch);
+        }
+        return true;
+    }
+    string longestPrefix(vector<string>&strs){
+        Node* node = root;
+        string prefix = "";
+        char nextchar;
+        while(true){
+            if(node->isEnd()) break;
+            int count = node->countChildren(nextchar);
+            if(count!=1) break;
+            prefix+= nextchar;
+            node = node->get(nextchar);
+        }
+        return prefix;
+    }
+
+};
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        int n = strs.size();
+        if(n == 0) return "";
+        Trie trie;
+        for(int i = 0;i<n;i++){
+            if(strs[i].size() == 0) return "";
+            trie.Insert(strs[i]);
+        }
+        return trie.longestPrefix(strs);
+    }
+};
