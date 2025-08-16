@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        int p = primes.size();
+        vector<long>dp(n);
+        vector<long>x(p,0), a(primes.begin(), primes.end());
+        dp[0] = 1;
+        for(int i =1;i<n;i++){
+            long mini = *min_element(a.begin(),a.end());
+            dp[i] = mini;
+            for(int j = 0;j<p;j++){
+                if(mini == a[j]){
+                    x[j]++;
+                    a[j] = dp[x[j]]*primes[j];
+                }
+            }
+        }
+        return dp[n-1];
+    }
+};
