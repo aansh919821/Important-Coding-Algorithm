@@ -1,0 +1,81 @@
+class Solution {
+public:
+    // bool check(int l, int r, string &s){
+    //     if(l==r) return true;
+    //     while(l<r){
+    //         if(s[l] == s[r]){
+    //             l++, r--;
+    //         }
+    //         else{
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
+    // string longestPalindrome(string s) {
+    //     int n = s.length();
+    //     for(int i = n;i>=1;i--){
+    //         for(int j = 0;j<=n-i;j++){
+    //             if(check(j,j+i-1,s)){
+    //                 return s.substr(j,i);
+    //             }
+    //         }
+    //     }
+    //     return "";
+    // }
+    // string longestPalindrome(string s){
+    //     int n = s.length();
+    //     pair<int,int>ans{0,0};
+    //     vector<vector<bool>>dp(n,vector<bool>(n,false));
+    //     for(int i = 0;i<n;i++) {
+    //         dp[i][i] = true;
+    //         ans = {i,i};
+    //     }
+    //     for(int i = 0;i<n-1;i++) {
+    //         if(s[i] == s[i+1]){
+    //             dp[i][i+1] = true;
+    //             ans = {i,i+1};
+    //         }
+    //     }
+    //     for(int dif = 2;dif<n;dif++){
+    //         for(int i = 0;i<n-dif;i++){
+    //             int j = i+dif;
+    //             if(s[i] == s[j]  && dp[i+1][j-1]){
+    //                 dp[i][j] = true;
+    //                 ans = {i,j};
+    //             }
+    //         }
+    //     }
+    //     return s.substr(ans.first,ans.second - ans.first + 1);
+        
+    // }
+    string check(int left, int right, string &s){
+        int l = left, r = right;
+        int n = s.length();
+        while(l>=0 && r<n){
+            if(s[l] == s[r]){
+                l--, r++;
+            }
+            else{
+                break;
+            }
+        }
+        return s.substr(l+1, r-l-1);
+    }
+    string longestPalindrome(string s){
+        int n = s.length();
+        string ans = "";
+        for(int i = 0;i<n;i++){
+            string odd = check(i,i,s);
+            if(odd.size()>ans.size()){
+                ans = odd;
+            }
+            string even = check(i,i+1,s);
+            if(even.size()>ans.size()){
+                ans = even;
+            }
+        }
+        return ans;
+    }
+};
+
