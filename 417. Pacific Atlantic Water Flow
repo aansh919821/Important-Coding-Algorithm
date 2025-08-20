@@ -1,0 +1,37 @@
+class Solution {
+public:
+    vector<vector<int>>ans;
+    int r[4] = {0,1,0,-1};
+    int c[4] = {1,0,-1,0};
+    vector<vector<int>>atl,pac;
+    queue<pair<int,int>>q;
+    void bfs(vector<vector<int>>&heights, vector<vector<int>>&arr, int row, int col){
+        q.push({row,col});
+        int n = heights.size();
+        int m = heights[0].size();
+        while(!q.empty()){
+            int row = q.front().first;
+            int col = q.front().second;
+            q.pop();
+            if(arr[row][col]) return;
+            arr[row][col] = 1;
+            if(atl[row][col] && pac[row][col]) ans.push_back(vector<int>{row,col});
+            for(int i = 0;i<4;i++){
+                int nr = row + r[i];
+                int nc = col + c[i];
+                if(nr<n && nc<m && nr>=0 && nc>=0 && heights[nr][nc]>=heights[row][col]){
+                    bfs(heights,arr,nr,nc);
+                }
+            }
+        }
+
+    }
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
+        int n = heights.size();
+        int m = heights[0].size();
+        atl = pac = vector<vector<int>>(n,vector<int>(m,0));
+        for(int i = 0;i<n;i++) bfs(heights,atl,i,m-1), bfs(heights,pac,i,0);
+        for(int i = 0;i<m;i++) bfs(heights,atl,n-1,i), bfs(heights,pac,0,i);
+        return ans;
+    }
+}; 
