@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int minSwapsCouples(vector<int>& arr) {
+        int n = arr.size();
+        vector<int>pos(n);
+        int ans = 0;
+        for(int i = 0;i<n;i++) pos[arr[i]] = i;
+        for(int i = 0;i<n;i+=2) {
+            int c1 = arr[i];
+            int c2 = arr[i+1];
+            int exp = c1 ^ 1;
+            if(c2 !=exp){
+                int ind = pos[exp];
+                ans++;
+                swap(arr[i+1],arr[ind]);
+                pos[c2] = ind;
+                pos[exp] = i+1;
+            }
+        }
+        return ans;
+    }
+};
