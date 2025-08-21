@@ -1,0 +1,48 @@
+class DisjointSet{
+public:
+    vector<int>rank,parent;
+    DisjointSet(int n){
+        parent.resize(n+1);
+        rank.resize(n+1,0);
+        for(int i = 0;i<=n;i++) {
+            parent[i] = i;
+        }
+    }
+    int findParent(int node){
+        if(node == parent[node]) return node;
+        return parent[node] = findParent(parent[node]);
+    }
+    bool unionByRank(int x, int y){
+        int ulp_x = findParent(x);
+        int ulp_y = findParent(y);
+        if(ulp_x == ulp_y) return false;
+        if(rank[ulp_x]>rank[ulp_y]){
+            parent[ulp_y] = ulp_x;
+        }
+        else if(rank[ulp_y]>rank[ulp_x]){
+            parent[ulp_x] = ulp_y; 
+        }
+        else{
+            parent[ulp_y] = ulp_x;
+            rank[ulp_x]++;
+        }
+        return true;
+    }
+};
+
+class Solution {
+
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        int n = edges.size();
+        DisjointSet ds(n);
+        for(auto e:edges){
+            int u = e[0];
+            int v = e[1];
+            if(!ds.unionByRank(u,v)){
+                return e;
+            }
+        }
+        return {};
+    }
+};
