@@ -1,0 +1,41 @@
+class DSU{
+public:
+    vector<int>parent;
+    DSU(int n){
+        parent.resize(n);
+        for(int i = 0;i<n;i++) parent[i] = i;
+    }
+    int find(int node){
+        if(node == parent[node]) return node;
+        return parent[node] = find(parent[node]);
+    }
+    void unite(int i, int j){
+        int par1 = find(i);
+        int par2 = find(j);
+        if(par1!= par2) {
+            parent[par1] = par2;
+        }
+        return;
+    }
+};
+
+class Solution {
+public:
+    vector<bool> pathExistenceQueries(int n, vector<int>& nums, int diff, vector<vector<int>>& q) {
+        vector<vector<int>>adj(n);
+        DSU dsu(n);
+        for(int i = 0;i<n-1;i++){
+            if(nums[i+1] - nums[i]<=diff){
+                dsu.unite(i,i+1);
+            }
+        }
+        vector<bool>ans(q.size(), false);
+        for(int i = 0;i<q.size();i++){
+            if(dsu.find(q[i][0]) == dsu.find(q[i][1])){
+                ans[i] = true;
+            }
+        }
+        return ans;
+
+    }
+};
