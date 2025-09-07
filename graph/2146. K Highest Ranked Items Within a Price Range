@@ -1,0 +1,58 @@
+class Solution {
+public:
+    struct Item {
+        int dist, price, r, c;
+        bool operator<(const Item &other) const {
+            // Max-heap: reverse of ranking criteria
+            if (dist != other.dist) return dist < other.dist;
+            if (price != other.price) return price < other.price;
+            if (r != other.r) return r < other.r;
+            return c < other.c;
+        }
+    };
+    vector<vector<int>> highestRankedKItems(vector<vector<int>>& grid, vector<int>& p, vector<int>& s, int k) {
+        int n = grid.size();
+        int m = grid[0].size();
+        int row[4] = {0,1,0,-1};
+        int col[4] = {1,0,-1,0};
+        vector<vector<int>>vis(n,vector<int>(m,0));
+        queue<pair<int,int>>q;
+        priority_queue<Item>pq;
+        int ctr = 0;
+        q.push({s[0],s[1]});
+        vis[s[0]][s[1]]  = 1;
+        while(!q.empty()){
+            int sz = q.size();
+            while(sz--){
+                int r = q.front().first;
+                int c = q.front().second;
+                q.pop();
+                int price = grid[r][c];
+                if(price>=p[0] && price<=p[1] && price>1){
+                    pq.push({ctr,price,r,c});
+                    if(pq.size() >k) pq.pop();
+                }
+                for(int i = 0;i<4;i++){
+                    int nr = r+row[i];
+                    int nc = c+col[i];
+                    if(nr<n && nr>=0 && nc<m && nc>=0 && vis[nr][nc] == 0 && grid[nr][nc]!=0){
+                        q.push({nr,nc});
+                        vis[nr][nc] = 1;
+                    }
+                }
+            }
+            ctr++;
+        }
+        vector<vector<int>>ans;
+        while(!pq.empty()){
+            int R = pq.top().r;
+            int C = pq.top().c;
+            pq.pop();
+            ans.push_back({R,C});
+
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+
+    }
+};
