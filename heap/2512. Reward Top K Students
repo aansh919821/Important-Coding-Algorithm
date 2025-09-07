@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<int>topStudents(vector<string>&pos, vector<string>&neg, vector<string>&rep, vector<int>&id, int k) {
+        int n = rep.size();
+        vector<int>ans;
+        unordered_set<string>st1(pos.begin(),pos.end()),st2(neg.begin(),neg.end());
+        auto cmp = [](const pair<int,int>& a, const pair<int,int>& b) {
+            if (a.first != b.first) return a.first < b.first; 
+            return a.second > b.second; 
+        };
+        priority_queue<pair<int,int>, vector<pair<int,int>>, decltype(cmp)> pq(cmp);
+        for(int i = 0;i<n;i++){
+            int cnt = 0;
+            stringstream ss(rep[i]);
+            string word;
+            while (ss >> word) {
+                if(st1.count(word)) cnt+=3;
+                if(st2.count(word)) cnt-=1;
+            }
+            pq.push({cnt,id[i]});
+        }
+        while(k-- && !pq.empty()){
+            ans.push_back(pq.top().second);
+            pq.pop();
+        }
+        return ans;
+        
+    }
+};
