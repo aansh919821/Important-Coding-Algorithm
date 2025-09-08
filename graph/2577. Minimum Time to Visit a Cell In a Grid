@@ -1,0 +1,40 @@
+#define ll long long
+#define Node tuple<ll,int,int>
+class Solution {
+public:
+    int minimumTime(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        if (n > 1 && m > 1 && grid[0][1] > 1 && grid[1][0] > 1) return -1;
+        vector<vector<ll>> dist(n, vector<ll>(m, 1e18));
+        priority_queue<Node, vector<Node>, greater<Node>> pq;
+        int row[4] = {0,1,0,-1};
+        int col[4] = {1,0,-1,0};
+        pq.push({0,0,0});
+        dist[0][0] = 0;
+        while (!pq.empty()) {
+            auto [t, r, c] = pq.top();
+            pq.pop();
+            if (t > dist[r][c]) continue;
+            if (r == n-1 && c == m-1) return t;
+            for (int i = 0; i < 4; i++) {
+                int nr = r + row[i];
+                int nc = c + col[i];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m) {
+                    ll nxt = t+1;
+                    ll wait = grid[nr][nc];
+                    if(nxt < wait){
+                        if((wait- nxt)%2 == 1) wait++;
+                        nxt = wait;
+                    }
+                    if (nxt < dist[nr][nc]) {
+                        dist[nr][nc] = nxt;
+                        pq.push({nxt, nr, nc});
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+};
+
