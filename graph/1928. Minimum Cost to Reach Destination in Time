@@ -1,0 +1,36 @@
+#define Node tuple<int,int,int>
+class Solution {
+public:
+    int minCost(int t, vector<vector<int>>& edges, vector<int>& fee) {
+        int n = fee.size();
+        unordered_map<int,vector<pair<int,int>>>adj;
+        for(auto e : edges) {
+            int x = e[0], y = e[1], z = e[2];
+            adj[x].push_back({y,z});
+            adj[y].push_back({x,z});
+        }
+        priority_queue<Node, vector<Node>, greater<Node>>pq;
+        pq.push({fee[0],0,0});
+        vector<int>tim(n,INT_MAX);
+        tim[0] = 0;
+        while(!pq.empty()){
+            auto [cost, time, node] = pq.top();
+            pq.pop();
+            if(time>t) continue;
+            if(node == n-1) return cost;
+            for(auto [node1,t0]:adj[node]){
+                int t1 = time+t0;
+                int dis = fee[node1]+cost;
+                if(t1<tim[node1]){
+                    pq.push({dis,t1,node1});
+                    tim[node1] = t1;
+                }   
+            }
+        }
+        return -1;
+    }
+};
+
+
+       
+
